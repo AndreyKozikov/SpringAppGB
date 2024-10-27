@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <title>Список пользователей для добавления к проекту</title>
+</head>
+<body>
+
+<div class="users-list-container">
+    <h2>Список всех пользователей для добавления к проекту</h2>
+    </h2>
+    <p>ID проекта: <span th:text="${projectId}"></span></p>
+    <p>Название проекта: <span th:text="${projectName}"></span></p>
+    <form th:action="@{${action == 'add' ? '/add_selected_users' : '/remove_selected_users'}}" method="post">
+        <input type="hidden" name="projectId" th:value="${projectId}">
+        <table>
+            <thead>
+            <tr>
+                <th>Выбрать</th>
+                <th>Имя</th>
+                <th>Электронная почта</th>
+                <th>Роль</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td>
+                    <input type="checkbox" th:name="selectedUsers" th:value="${user.id}">
+                </td>
+                <td>
+                    <a th:href="@{/user/{id}/projects(id=${user.id})}" th:text="${user.userName}"></a>
+                </td>
+                <td th:text="${user.email}"></td>
+                <td th:switch="${user.role}">
+                    <span th:case="'ADMIN'">Администратор</span>
+                    <span th:case="'PROJECT_MANAGER'">Руководитель проекта</span>
+                    <span th:case="'PROJECT_ADMIN'">Администратор проекта</span>
+                    <span th:case="'USER'">Пользователь</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <br>
+        <button type="submit" th:text="${message}"></button>
+    </form>
+    <br>
+    <a th:href="@{/user}">На главную</a>
+</div>
+</body>
+</html>

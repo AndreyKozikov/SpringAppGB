@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: SpringDataApp  # Название приложения, используется в логах и метаданных.
+
+  datasource:
+    url: jdbc:h2:mem:testdb  # URL для подключения к базе данных H2, база данных в памяти.
+    username: root  # Логин для подключения к базе данных.
+    password: root  # Пароль для подключения к базе данных.
+    driver-class-name: org.h2.Driver  # Класс драйвера для подключения к H2.
+
+  jpa:
+    hibernate:
+      ddl-auto: none  # Стратегия инициализации схемы базы данных. 'none' означает, что Hibernate не будет управлять схемой (не создаст и не изменит таблицы).
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrateg  # Стратегия именования таблиц и столбцов в базе данных.
+    database-platform: org.hibernate.dialect.H2Dialect  # Указывает Hibernate диалект для базы данных H2.
+    show-sql: true  # Включает вывод SQL-запросов в логах.
+
+  h2:
+    console:
+      enabled: true  # Включает консоль H2 для удобного просмотра и управления данными в базе.
+      path: /h2-console  # Путь для доступа к консоли H2 через веб-браузер.
+
+  thymeleaf:
+    prefix: classpath:/templates/  # Указывает на папку, где хранятся HTML-шаблоны для Thymeleaf.
+    suffix: .html  # Расширение файлов шаблонов (по умолчанию .html).
+    mode: HTML  # Режим работы Thymeleaf (HTML, XML, etc.).
+    encoding: UTF-8  # Кодировка для обработки шаблонов Thymeleaf.
+
+logging:
+  level:
+    org.springframework.web: DEBUG  # Уровень логирования для веб-компонентов Spring (в данном случае уровень DEBUG для детализированных логов).

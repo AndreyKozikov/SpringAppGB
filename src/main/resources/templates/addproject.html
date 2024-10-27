@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма добавления проекта</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="form-container">
+    <h2>Добавить новый проект</h2>
+    <form action="/add_project" method="POST" th:object="${project}">
+        <input type="text" id="name" th:field="*{name}" placeholder="Введите название проекта" required>
+        <br><br>
+        <textarea id="description" th:field="*{description}" placeholder="Введите описание проекта" required></textarea>
+        <br><br>
+        <input type="date" id="createdDate" th:field="*{createdDate}" required>
+        <br><br>
+        <input type="submit" value="Добавить проект">
+    </form>
+</div>
+</body>
+</html>

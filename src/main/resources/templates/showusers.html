@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <title>Список пользователей</title>
+</head>
+<body>
+<div class="users-list-container">
+    <h2>Список всех пользователей</h2>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Электронная почта</th>
+            <th>Роль</th>
+        </tr>
+        </thead>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td>
+                <a th:href="@{/user/{id}/projects(id=${user.id})}" th:text="${user.userName}"></a>
+            </td>
+            <td th:text="${user.email}"></td>
+            <td th:switch="${user.role}">
+                <span th:case="'ADMIN'">Администратор</span>
+                <span th:case="'PROJECT_MANAGER'">Руководитель проекта</span>
+                <span th:case="'PROJECT_ADMIN'">Администратор проекта</span>
+                <span th:case="'USER'">Пользователь</span>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <a th:href="@{/add_user}">Добавить нового пользователя</a>
+    <a th:href="@{/user}">На главную</a>
+</div>
+</body>
+</html>
