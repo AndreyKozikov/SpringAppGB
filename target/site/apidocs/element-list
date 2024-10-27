@@ -1,0 +1,6 @@
+com.example.SpringAppGB
+com.example.SpringAppGB.controllers
+com.example.SpringAppGB.controllers.api
+com.example.SpringAppGB.model
+com.example.SpringAppGB.repository.interfaces
+com.example.SpringAppGB.services
