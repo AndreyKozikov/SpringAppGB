@@ -2,11 +2,11 @@ package com.example.SpringAppGB.controllers.api;
 
 import com.example.SpringAppGB.model.Project;
 import com.example.SpringAppGB.model.User;
-import com.example.SpringAppGB.model.UserProjectRequest;
+import com.example.SpringAppGB.model.DTO.UserProjectRequest;
 import com.example.SpringAppGB.services.ProjectService;
 import com.example.SpringAppGB.services.UserProjectService;
 import com.example.SpringAppGB.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,19 +20,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api")
+@AllArgsConstructor
 public class UserProjectControllerApi {
 
     private final UserProjectService userProjectService;
     private final UserService userService;
     private final ProjectService projectService;
-
-    @Autowired
-    public UserProjectControllerApi(UserProjectService userProjectService, UserService userService, ProjectService projectService) {
-        this.userProjectService = userProjectService;
-        this.userService = userService;
-        this.projectService = projectService;
-    }
-
 
     /**
      * Метод, обрабатывающий GET-запрос для получения списка пользователей, связанных с определенным проектом
@@ -72,7 +65,7 @@ public class UserProjectControllerApi {
     }
 
     /**
-     * Метод, обрабатывающий POST-запрос для добавления пользователя к проекту
+     * Метод, обрабатывающий POST-запрос для добавления пользователя (списка пользователей) к проекту
      *
      * @param request объект запроса с идентификатором проекта и списком пользователей
      * @return ResponseEntity с результатом операции
@@ -101,7 +94,6 @@ public class UserProjectControllerApi {
      * @param request объект запроса с идентификатором проекта и списком пользователей
      * @return ResponseEntity с результатом операции
      */
-
     @PostMapping("/remove_users_from_project")
     public ResponseEntity<String> removeUserFromProject(@RequestBody(required = false) UserProjectRequest request) {
         // Проверка на корректность входных данных

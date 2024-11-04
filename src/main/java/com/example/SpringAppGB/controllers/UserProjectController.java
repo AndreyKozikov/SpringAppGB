@@ -6,6 +6,7 @@ import com.example.SpringAppGB.model.User;
 import com.example.SpringAppGB.services.ProjectService;
 import com.example.SpringAppGB.services.UserProjectService;
 import com.example.SpringAppGB.services.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,33 +24,27 @@ import java.util.List;
  * добавления пользователей в проект и удаления пользователей из проекта.
  */
 @Controller
+@AllArgsConstructor
 public class UserProjectController {
 
     private final UserProjectService userProjectService;
     private final UserService userService;
     private final ProjectService projectService;
 
-    @Autowired
-    public UserProjectController(UserProjectService userProjectService, UserService userService, ProjectService projectService) {
-        this.userProjectService = userProjectService;
-        this.userService = userService;
-        this.projectService = projectService;
-    }
-
 
     /**
-     * Метод возвращает главную страницу
+     * Метод обрабатывает GET-запрос и возвращает главную страницу
      *
      * @param model модель для передачи данных в представление
      * @return имя шаблона главной страницы
      */
-    @GetMapping("/user")
+    @GetMapping("/main")
     public String showMainPage(Model model) {
         return "mainpage";
     }
 
     /**
-     * Метод возвращает пользователей по идентификатору проекта
+     * Метод обрабатывает GET-запрос на получение пользователей по идентификатору проекта
      *
      * @param projectId идентификатор проекта
      * @param model     модель для передачи данных в представление
@@ -61,13 +56,13 @@ public class UserProjectController {
         if (users != null) {
             model.addAttribute("projectId", projectId);
             model.addAttribute("users", users);
-            return "project_users";
+            return "/projects/project_users";
         }
-        return "redirect:/user";
+        return "redirect:/projects/project_managment";
     }
 
     /**
-     * Метод возвращает проекты по идентификатору пользователя
+     * Метод обрабатывает GET-запрос на получение проектов по идентификатору пользователя
      *
      * @param userId идентификатор пользователя
      * @param model  модель для передачи данных в представление
@@ -79,13 +74,13 @@ public class UserProjectController {
         if (projects != null) {
             model.addAttribute("userName", userService.getUserById(userId).getUserName());
             model.addAttribute("projects", projects);
-            return "user_projects";
+            return "/users/user_projects";
         }
-        return "redirect:/user";
+        return "redirect:/user_managment";
     }
 
     /**
-     * Метод возвращает форму для добавления пользователей к проекту
+     * Метод обрабатывает GET-запрос и возвращает форму для добавления пользователей к проекту
      *
      * @param projectId идентификатор проекта
      * @param model     модель для передачи данных в представление
@@ -100,13 +95,13 @@ public class UserProjectController {
             model.addAttribute("users", users);
             model.addAttribute("message", "Добавить выбранных пользователей");
             model.addAttribute("action", "add");
-            return "project_actions";
+            return "/projects/add_remove_user_to_project";
         }
         return "redirect:/user";
     }
 
     /**
-     * Метод обрабатывает добавление выбранных пользователей к проекту
+     * Метод обрабатывает POST-запрос на добавление выбранных пользователей к проекту
      *
      * @param projectId идентификатор проекта
      * @param userIds   список идентификаторов пользователей
@@ -119,19 +114,19 @@ public class UserProjectController {
                                    List<Long> userIds, Model model) {
 
         if (projectId == -1 || userIds == null || userIds.isEmpty()) {
-            return "redirect:/user"; // Перенаправление на главную страницу, если проект не найден
+            return "redirect:/projects/project_managment"; // Перенаправление на главную страницу, если проект не найден
         }
         if (!userProjectService.addUserToProject(projectId, userIds)) {
-            return "redirect:/user";
+            return "redirect:/projects/project_managment";
         }
         List<User> users = userProjectService.getUsersByProjectId(projectId);
         model.addAttribute("projectId", projectId);
         model.addAttribute("users", users);
-        return "project_users";
+        return "/projects/project_managment";
     }
 
     /**
-     * Метод возвращает форму для удаления пользователей из проекта
+     * Метод обрабатывает GET-запрос и возвращает форму для удаления пользователей из проекта
      *
      * @param projectId идентификатор проекта
      * @param model     модель для передачи данных в представление
@@ -146,13 +141,13 @@ public class UserProjectController {
             model.addAttribute("users", users);
             model.addAttribute("message", "Удалить выбранных пользователей");
             model.addAttribute("action", "remove");
-            return "project_actions";
+            return "/projects/add_remove_user_to_project";
         }
-        return "redirect:/user";
+        return "redirect:/projects/project_managment";
     }
 
     /**
-     * Метод обрабатывает удаление выбранных пользователей из проекта
+     * Метод обрабатывает POST-запрос на удаление выбранных пользователей из проекта
      *
      * @param projectId идентификатор проекта
      * @param userIds   список идентификаторов пользователей
@@ -165,14 +160,14 @@ public class UserProjectController {
                                         List<Long> userIds, Model model) {
 
         if (projectId == -1 || userIds == null || userIds.isEmpty()) {
-            return "redirect:/user"; // Перенаправление на главную страницу, если проект не найден
+            return "redirect:/projects/project_managment"; // Перенаправление на главную страницу, если проект не найден
         }
         if (userProjectService.removeUserFromProject(projectId, userIds)) {
             List<User> users = userProjectService.getUsersByProjectId(projectId);
             model.addAttribute("projectId", projectId);
             model.addAttribute("users", users);
-            return "project_users";
+            return "/projects/project_managment";
         }
-        return "redirect:/user";
+        return "redirect:/projects/project_managment";
     }
 }

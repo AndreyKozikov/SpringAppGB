@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление проектами</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script>
+
+        function fillTable(projects) {
+            const tbody = document.querySelector('#projectsTable tbody');
+            tbody.innerHTML = ''; // Очищаем текущее содержимое таблицы
+
+            if (projects.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="4">Проекты не найдены.</td>`;
+                tbody.appendChild(row); // Отображение сообщения, если список пуст
+            } else {
+                projects.forEach(project => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                                <td><a href="/project/${project.id}/users">${project.name}</td>
+                                <td>${project.description}</td>
+                                <td>${project.createdDate}</td>
+                                <td>
+                                    </p><a href="/add_user_to_project/${project.id}">Добавить пользователей</a>
+                                    <p><a href="/remove_users_from_project/${project.id}">Удалить пользователей</a></p>
+                                    <a href="/edit_project/${project.id}">Редактировать</a>
+                                   <a href="#" onclick="deleteProject(${project.id}, this.closest('tr'))">Удалить</a>
+                                </td>
+                            `;
+                    tbody.appendChild(row); // Добавляем новую строку в таблицу
+                });
+            }
+        }
+
+        function deleteProject(projectId, row) {
+            if (confirm('Вы действительно хотите удалить проект?')) {
+                fetch(`/api/delete_project/${projectId}`, {
+                    method: 'DELETE'
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Проект успешно удален');
+                            row.remove();
+                        } else {
+                            alert('Ошибка при удалении проекта');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка:', error);
+                        alert('Произошла ошибка при удалении проекта');
+                    });
+            }
+        }
+
+        function fetchProjects(url) {
+            fetch(url)
+                .then(response => response.json()) // Ожидаем JSON-ответ
+                .then(projects => {
+                    fillTable(projects);
+                })
+                .catch(error => console.error('Error fetching projects:', error));
+        }
+
+        function searchProjects(event) {
+            event.preventDefault();
+            const query = document.querySelector('input[name="query"]').value;
+            fetchProjects(`/api/search_projects?query=${encodeURIComponent(query)}`);
+        }
+
+        function fetchAllProjects() {
+            fetchProjects('/api/get_all_projects');
+        }
+
+        function addProject() {
+            window.location.href = '/add_project';
+        }
+
+    </script>
+</head>
+<body>
+<h1>Управление проектами</h1>
+
+<!-- Кнопка добавления нового пользователя -->
+<div class="button-container">
+    <button class="button" onclick="addProject()">Добавить новый проект</button>
+    <input type="button" value="Назад" class="button" onclick="location.href='/main'"/>
+</div>
+
+<br>
+
+<!-- Форма поиска -->
+
+<table>
+    <tbody>
+    <tr>
+        <td>
+            <form id="searchForm" onsubmit="searchProjects(event)">
+                <label>
+                    <input type="text" name="query" class="search-input"
+                           placeholder="Поиск проекта по названию или описанию" required>
+                </label>
+                <button class="button" type="submit">Search</button>
+            </form>
+        </td>
+        <td>
+            <!-- Кнопка получения всех пользователей -->
+            <button class="button" id="fetchAllUsersButton" onclick="fetchAllProjects()">Получить все проекты
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<!-- Таблица с проектами -->
+<table id="projectsTable">
+    <thead>
+    <tr>
+        <th>Название</th>
+        <th>Описание</th>
+        <th>Дата создания</th>
+        <th>Действие</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Строки будут динамически добавляться здесь через JavaScript -->
+    </tbody>
+</table>
+
+<!-- Пагинация -->
+
+
+</body>
+</html>

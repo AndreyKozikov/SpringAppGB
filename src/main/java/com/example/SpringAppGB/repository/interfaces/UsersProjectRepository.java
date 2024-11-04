@@ -69,9 +69,9 @@ public interface UsersProjectRepository extends JpaRepository<UsersProject, Long
      * @return количество затронутых строк (должно быть 1 при успешном выполнении)
      */
     @Modifying
-    @Transactional
-    @Query("DELETE FROM UsersProject up WHERE up.user.id = :userId and up.project.id = :projectId")
-    int removeUsersFromProject(@Param("userId") Long userId,
+    @Query("DELETE FROM UsersProject up WHERE (:userId IS NULL OR  up.user.id = :userId)" +
+            " AND (:projectId IS NULL OR up.project.id = :projectId)")
+    int removeUserAndProject(@Param("userId") Long userId,
                                @Param("projectId") Long projectId);
 
     /**

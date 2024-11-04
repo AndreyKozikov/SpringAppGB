@@ -12,7 +12,6 @@
 <table>
     <thead>
     <tr>
-        <th>ID</th>
         <th>Название проекта</th>
         <th>Описание проекта</th>
         <th>Время создания проекта</th>
@@ -20,13 +19,12 @@
     </thead>
     <tbody>
     <tr th:each="project : ${projects}">
-        <td th:text="${project.id}"></td>
         <td th:text="${project.name}"></td>
         <td th:text="${project.description}"></td>
         <td th:text="${project.createdDate}"></td>
     </tr>
     </tbody>
 </table>
-<a th:href="@{/user}">На главную</a>
+<input type="button" value="Назад" class="button" onclick="location.href='/users_managment'"/>
 </body>
 </html>

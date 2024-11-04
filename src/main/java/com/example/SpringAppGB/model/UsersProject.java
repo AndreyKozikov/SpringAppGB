@@ -1,5 +1,6 @@
 package com.example.SpringAppGB.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,6 +21,7 @@ public class UsersProject extends EntityWithRelation{
      */
     @ManyToOne
     @JoinColumn(name = "project_id", referencedColumnName = "id")
+    @JsonBackReference // Разрыв циклической зависимости на стороне Project
     private Project project;
 
     /**
@@ -29,5 +31,6 @@ public class UsersProject extends EntityWithRelation{
      */
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonBackReference // Разрыв циклической зависимости на стороне User
     private User user;
 }

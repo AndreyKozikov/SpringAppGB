@@ -12,7 +12,6 @@
 <table>
     <thead>
     <tr>
-        <th>ID</th>
         <th>Имя пользователя</th>
         <th>Email</th>
         <th>Роль</th>
@@ -20,7 +19,6 @@
     </thead>
     <tbody>
     <tr th:each="user : ${users}">
-        <td th:text="${user.id}"></td>
         <td th:text="${user.userName}"></td>
         <td th:text="${user.email}"></td>
         <td th:switch="${user.role}">
@@ -32,6 +30,6 @@
     </tr>
     </tbody>
 </table>
-<a th:href="@{/user}">На главную</a>
+<input type="button" value="Назад" class="button" onclick="location.href='/project_managment'"/>
 </body>
 </html>

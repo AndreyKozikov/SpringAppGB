@@ -20,12 +20,6 @@ spring:
       enabled: true  # Включает консоль H2 для удобного просмотра и управления данными в базе.
       path: /h2-console  # Путь для доступа к консоли H2 через веб-браузер.
 
-  thymeleaf:
-    prefix: classpath:/templates/  # Указывает на папку, где хранятся HTML-шаблоны для Thymeleaf.
-    suffix: .html  # Расширение файлов шаблонов (по умолчанию .html).
-    mode: HTML  # Режим работы Thymeleaf (HTML, XML, etc.).
-    encoding: UTF-8  # Кодировка для обработки шаблонов Thymeleaf.
-
 logging:
   level:
     org.springframework.web: DEBUG  # Уровень логирования для веб-компонентов Spring (в данном случае уровень DEBUG для детализированных логов).

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавление нового проекта</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="form-container">
+    <h2>Заполните данные проекта</h2>
+
+    <form id="editProjectForm" th:object="${project}">
+        <input class="search-input" type="text" id="name" th:field="*{name}" placeholder="Введите название проекта"
+               required>
+        <br><br>
+        <textarea class="search-input" id="description" th:field="*{description}" placeholder="Введите описание проекта"
+                  required></textarea>
+        <br><br>
+        <input class="search-input" type="date" id="createdDate"
+               th:field="*{createdDate}" th:value="${formattedDate}" required>
+
+        <br><br>
+        <input class="button" type="submit" value="Сохранить изменения">
+        <input type="button" value="Отмена" class="button" onclick="location.href='/project_managment'"/>
+    </form>
+</div>
+<script th:inline="javascript">
+    document.getElementById('editProjectForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const projectId = /*[[${project.id}]]*/;
+        const projectData = {
+            name: document.getElementById('name').value,
+            description: document.getElementById('description').value,
+            createdDate: document.getElementById('createdDate').value
+        };
+
+        fetch('/api/edit_project/' + projectId, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(projectData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка сети');
+                }
+                return response.json();
+            })
+            .then(data => {
+                window.location.href = data.location; // Перенаправление на полученный URL
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Произошла ошибка при обновлении проекта');
+            });
+    });
+</script>
+</body>
+</html>

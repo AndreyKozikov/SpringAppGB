@@ -11,7 +11,28 @@ th, td {
     padding: 10px;
     border: 1px solid #ddd;
     text-align: left;
+     background-color: #f4f4f4;
 }
-th {
-    background-color: #f4f4f4;
+ /* Дополнительные стили для кнопок и формы */
+.button {
+    padding: 10px 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px; /* Отступ между кнопками */
 }
+.search-input {
+    width: 800px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px; /* Закругленные углы */
+}
+.button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+

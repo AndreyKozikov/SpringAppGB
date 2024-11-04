@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление пользователями</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script>
+
+        function fillTable(users) {
+            const tbody = document.querySelector('#usersTable tbody');
+            tbody.innerHTML = ''; // Очищаем текущее содержимое таблицы
+
+            if (users.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="4">Пользователи не найдены.</td>`;
+                tbody.appendChild(row); // Отображение сообщения, если список пуст
+            } else {
+                users.forEach(user => {
+                    const row = document.createElement('tr');
+                    let roleDisplay;
+                    switch (user.role) {
+                        case 'ADMIN':
+                            roleDisplay = 'Администратор';
+                            break;
+                        case 'PROJECT_MANAGER':
+                            roleDisplay = 'Руководитель проекта';
+                            break;
+                        case 'PROJECT_ADMIN':
+                            roleDisplay = 'Администратор проекта';
+                            break;
+                        case 'USER':
+                            roleDisplay = 'Пользователь';
+                            break;
+                        default:
+                            roleDisplay = user.role;
+                    }
+                    row.innerHTML = `
+                                <td><a href="user/${user.id}/projects">${user.userName}</a></td>
+                                <td>${user.email}</td>
+                                <td>${roleDisplay}</td>
+                                <td>
+                                    <a href="/edit_user/${user.id}">Редактировать</a>
+                                   <a href="#" onclick="deleteUser(${user.id}, this.closest('tr'))">Удалить</a>
+                                </td>
+                            `;
+                    tbody.appendChild(row); // Добавляем новую строку в таблицу
+                });
+            }
+        }
+        function deleteUser(userId, row) {
+            if (confirm('Вы действительно хотите удалить пользователя?')) {
+                fetch(`/api/delete_user/${userId}`, {
+                    method: 'DELETE'
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Если удаление прошло успешно, обновите интерфейс или удалите строку из таблицы
+                            alert('Пользователь успешно удален');
+                            // Например, вы можете обновить таблицу, или удалить строку
+                            row.remove();
+                        } else {
+                            alert('Ошибка при удалении пользователя');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка:', error);
+                        alert('Произошла ошибка при удалении пользователя');
+                    });
+            }
+        }
+
+        function fetchUsers(url) {
+            fetch(url)
+                .then(response => response.json()) // Ожидаем JSON-ответ
+                .then(users => {
+                    fillTable(users);
+                })
+                .catch(error => console.error('Error fetching users:', error));
+        }
+
+        function searchUsers(event) {
+            event.preventDefault();
+            const query = document.querySelector('input[name="query"]').value;
+            fetchUsers(`/api/search_users?query=${encodeURIComponent(query)}`);
+        }
+
+        function fetchAllUsers() {
+            fetchUsers('/api/get_all_users');
+        }
+
+        function addUser() {
+            window.location.href = '/add_user';
+        }
+
+    </script>
+</head>
+<body>
+<h1>Управление пользователями</h1>
+
+<!-- Кнопка добавления нового пользователя -->
+<div class="button-container">
+    <button class="button" onclick="addUser()">Добавить нового пользователя</button>
+    <input type="button" value="На главную" class="button" onclick="location.href='/main'"/>
+</div>
+<br>
+
+<!-- Форма поиска -->
+
+<table>
+    <tbody>
+    <tr>
+        <td>
+            <form id="searchForm" onsubmit="searchUsers(event)">
+                <label>
+                    <input type="text" name="query" class="search-input"
+                           placeholder="Поиск пользователя по имени или email">
+                </label>
+                <button class="button" type="submit">Search</button>
+            </form>
+        </td>
+        <td>
+            <!-- Кнопка получения всех пользователей -->
+            <button class="button" id="fetchAllUsersButton" onclick="fetchAllUsers()">Получить всех пользователей</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+<!-- Таблица с пользователями -->
+<table id="usersTable">
+    <thead>
+    <tr>
+        <th>Имя пользователя</th>
+        <th>Email</th>
+        <th>Роль</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Строки будут динамически добавляться здесь через JavaScript -->
+    </tbody>
+</table>
+
+<!-- Пагинация -->
+
+
+</body>
+</html>

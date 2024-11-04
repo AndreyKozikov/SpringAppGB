@@ -1,4 +1,4 @@
-package com.example.SpringAppGB.model;
+package com.example.SpringAppGB.model.DTO;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;
