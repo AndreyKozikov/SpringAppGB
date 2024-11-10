@@ -1,12 +1,20 @@
 package com.example.SpringAppGB.services;
 
+import com.example.SpringAppGB.Authorization.services.JwtTokenProvider;
 import com.example.SpringAppGB.model.User;
 import com.example.SpringAppGB.repository.interfaces.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * Сервис для управления пользователями.
@@ -14,16 +22,34 @@ import java.util.List;
  */
 @Service
 @AllArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;  // Добавлен PasswordEncoder
+    private final JwtTokenProvider jwtTokenProvider;
+
+    /**
+     * Получает пользователя по его username
+     *
+     * @param username
+     * @return бъект пользователя или null, если пользователь не найден
+     */
+    Optional<User> findByUserName(String username) {
+        return userRepository.findByUserName(username);
+    }
 
     /**
      * Добавляет нового пользователя в систему.
      *
-     * @param user объект пользователя для добавления
+     * @param userAdd объект пользователя для добавления
      */
-    public void addUser(User user) {
+    @Transactional
+    public void addUser(User userAdd) {
+        User user = new User();
+        user.setUserName(userAdd.getUserName());
+        user.setEmail(userAdd.getEmail());
+        user.setPassword(passwordEncoder.encode(userAdd.getPassword()));
+        user.setRole(userAdd.getRole());
         userRepository.save(user);
     }
 
@@ -78,5 +104,39 @@ public class UserService {
     @Transactional
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
+    }
+
+    /**
+     * Метод загружает пользователя по имени пользователя для аутентификации в Spring Security.
+     *
+     * @param username имя пользователя, которое нужно найти
+     * @return UserDetails объект с данными пользователя для аутентификации
+     * @throws UsernameNotFoundException если пользователь с таким именем не найден
+     */
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = findByUserName(username).orElseThrow(() ->
+                new UsernameNotFoundException(""));
+        // Преобразование единственной роли в список SimpleGrantedAuthority
+        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getUserName(),
+                user.getPassword(),
+                authorities);
+    }
+
+    /**
+     * Извлекает пользователя из токена JWT, находящегося в cookies запроса.
+     *
+     * @param request объект HttpServletRequest, содержащий cookies с JWT токеном.
+     * @return объект User, соответствующий имени пользователя, извлечённому из токена,
+     *         или null, если пользователь не найден.
+     */
+    public User getUserFromToken(HttpServletRequest request) {
+        String token = jwtTokenProvider.getJwtFromCookies(request);
+        String username = jwtTokenProvider.getUsernameFromToken(token);
+        return userRepository.findByUserName(username).orElse(null);
     }
 }

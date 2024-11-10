@@ -28,7 +28,7 @@
                                 <td>
                                     </p><a href="/add_user_to_project/${project.id}">Добавить пользователей</a>
                                     <p><a href="/remove_users_from_project/${project.id}">Удалить пользователей</a></p>
-                                    <a href="/edit_project/${project.id}">Редактировать</a>
+                                    <a href="/projects/edit/${project.id}">Редактировать</a>
                                    <a href="#" onclick="deleteProject(${project.id}, this.closest('tr'))">Удалить</a>
                                 </td>
                             `;
@@ -39,7 +39,7 @@
 
         function deleteProject(projectId, row) {
             if (confirm('Вы действительно хотите удалить проект?')) {
-                fetch(`/api/delete_project/${projectId}`, {
+                fetch(`/api/projects/delete/${projectId}`, {
                     method: 'DELETE'
                 })
                     .then(response => {
@@ -69,15 +69,15 @@
         function searchProjects(event) {
             event.preventDefault();
             const query = document.querySelector('input[name="query"]').value;
-            fetchProjects(`/api/search_projects?query=${encodeURIComponent(query)}`);
+            fetchProjects(`/api/projects/search?query=${encodeURIComponent(query)}`);
         }
 
         function fetchAllProjects() {
-            fetchProjects('/api/get_all_projects');
+            fetchProjects('/api/projects/get_all');
         }
 
         function addProject() {
-            window.location.href = '/add_project';
+            window.location.href = '/projects/add';
         }
 
     </script>

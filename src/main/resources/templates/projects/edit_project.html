@@ -22,7 +22,7 @@
 
         <br><br>
         <input class="button" type="submit" value="Сохранить изменения">
-        <input type="button" value="Отмена" class="button" onclick="location.href='/project_managment'"/>
+        <input type="button" value="Отмена" class="button" onclick="location.href='/projects/managment'"/>
     </form>
 </div>
 <script th:inline="javascript">
@@ -36,7 +36,7 @@
             createdDate: document.getElementById('createdDate').value
         };
 
-        fetch('/api/edit_project/' + projectId, {
+        fetch('/api/projects/edit/' + projectId, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

@@ -23,16 +23,13 @@
                     const row = document.createElement('tr');
                     let roleDisplay;
                     switch (user.role) {
-                        case 'ADMIN':
+                        case 'ROLE_ADMIN':
                             roleDisplay = 'Администратор';
                             break;
-                        case 'PROJECT_MANAGER':
+                        case 'ROLE_MANAGER':
                             roleDisplay = 'Руководитель проекта';
                             break;
-                        case 'PROJECT_ADMIN':
-                            roleDisplay = 'Администратор проекта';
-                            break;
-                        case 'USER':
+                        case 'ROLE_USER':
                             roleDisplay = 'Пользователь';
                             break;
                         default:
@@ -43,7 +40,7 @@
                                 <td>${user.email}</td>
                                 <td>${roleDisplay}</td>
                                 <td>
-                                    <a href="/edit_user/${user.id}">Редактировать</a>
+                                    <a href="/users/edit/${user.id}">Редактировать</a>
                                    <a href="#" onclick="deleteUser(${user.id}, this.closest('tr'))">Удалить</a>
                                 </td>
                             `;
@@ -53,7 +50,7 @@
         }
         function deleteUser(userId, row) {
             if (confirm('Вы действительно хотите удалить пользователя?')) {
-                fetch(`/api/delete_user/${userId}`, {
+                fetch(`/api/users/delete/${userId}`, {
                     method: 'DELETE'
                 })
                     .then(response => {
@@ -85,15 +82,15 @@
         function searchUsers(event) {
             event.preventDefault();
             const query = document.querySelector('input[name="query"]').value;
-            fetchUsers(`/api/search_users?query=${encodeURIComponent(query)}`);
+            fetchUsers(`/api/users/search?query=${encodeURIComponent(query)}`);
         }
 
         function fetchAllUsers() {
-            fetchUsers('/api/get_all_users');
+            fetchUsers('/api/users/get_all');
         }
 
         function addUser() {
-            window.location.href = '/add_user';
+            window.location.href = '/users/add';
         }
 
     </script>

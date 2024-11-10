@@ -1,11 +1,14 @@
 package com.example.SpringAppGB.model.DTO;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
 /**
  * DTO-класс для передачи данных при добавлении нового пользователя.
  */
 @Data
+@AllArgsConstructor
 public class UserDTO {
 
     /**

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма входа</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="button-container">
+    <form id="loginForm" onsubmit="return submitForm(event)">
+        <input class="input" type="text" name="userName" placeholder="Логин" required>
+        <br><br>
+        <input class="input" type="password" name="password" placeholder="Пароль" required>
+        <br><br>
+        <button class="button" type="submit">Войти</button>
+    </form>
+</div>
+
+<script th:inline="javascript">
+    function submitForm(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const formData = new FormData(form);
+        const object = Object.fromEntries(formData);
+        const json = JSON.stringify(object);
+
+        fetch('/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: json,
+            redirect: 'follow' // Это гарантирует, что редирект будет обработан
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Ошибка сети');
+                }
+                // Если сервер отправил редирект, браузер сам перейдет по Location
+                window.location.href = response.headers.get('Location');  // Не нужно вручную обрабатывать редирект
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Ошибка при авторизации');
+            });
+    }
+</script>
+</body>
+</html>

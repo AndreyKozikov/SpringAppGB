@@ -29,6 +29,12 @@ th, td {
     border: 1px solid #ddd;
     border-radius: 5px; /* Закругленные углы */
 }
+.input {
+    width: 800px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px; /* Закругленные углы */
+}
 .button-container {
             display: flex;
             justify-content: space-between;

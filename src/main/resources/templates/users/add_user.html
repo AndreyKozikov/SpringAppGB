@@ -9,7 +9,7 @@
 <body>
 <div class="form-container">
     <h2>Заполните данные пользователя</h2>
-    <form action="/add_user" method="POST" th:object="${user}">
+    <form action="/users/add" method="POST" th:object="${user}">
         <input class="search-input" type="text" id="user_name" th:field="*{userName}" placeholder="Введите имя пользователя" required>
         <br><br>
         <input class="search-input" type="password" id="password" th:field="*{password}" placeholder="Введите пароль" required>
@@ -17,15 +17,14 @@
         <input class="search-input" type="email" id="email" th:field="*{email}" placeholder="Введите email" required>
         <br><br>
         <select class="search-input" id="role" th:field="*{role}" required>
-            <option value="ADMIN">Администратор</option>
-            <option value="PROJECT_MANAGER">Руководитель проекта</option>
-            <option value="PROJECT_ADMIN">Администратор проекта</option>
-            <option value="USER">Пользователь</option>
+            <option value="ROLE_ADMIN">Администратор</option>
+            <option value="ROLE_MANAGER">Руководитель проекта</option>
+            <option value="ROLE_USER">Пользователь</option>
         </select>
         <br><br>
 
         <input class="button" type="submit" value="Добавить пользователя">
-        <input type="button" value="Отмена" class="button" onclick="location.href='/users_managment'" />
+        <input type="button" value="Отмена" class="button" onclick="location.href='/users/managment'" />
     </form>
 </div>
 </body>

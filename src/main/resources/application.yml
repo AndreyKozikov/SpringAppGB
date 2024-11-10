@@ -7,6 +7,10 @@ spring:
     username: root  # Логин для подключения к базе данных.
     password: root  # Пароль для подключения к базе данных.
     driver-class-name: org.h2.Driver  # Класс драйвера для подключения к H2.
+  sql:
+    init:
+      platform: h2
+      mode: always
 
   jpa:
     hibernate:
@@ -20,6 +24,15 @@ spring:
       enabled: true  # Включает консоль H2 для удобного просмотра и управления данными в базе.
       path: /h2-console  # Путь для доступа к консоли H2 через веб-браузер.
 
+jwt:
+  lifetime: 10m
+  private_key_path: "/opt/app/keys/private_key.pem"
+  public_key_path: "/opt/app/keys/public_key.pem"
+
 logging:
   level:
-    org.springframework.web: DEBUG  # Уровень логирования для веб-компонентов Spring (в данном случае уровень DEBUG для детализированных логов).
+    org:
+      springframework:
+        web: DEBUG  # Уровень логирования для веб-компонентов Spring (в данном случае уровень DEBUG для детализированных логов).
+      hibernate:
+        SQL: DEBUG

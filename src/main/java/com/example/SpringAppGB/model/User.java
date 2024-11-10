@@ -4,9 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -16,8 +20,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name="users")
-public class User {
-
+public class User{
 
     /**
      * Сущность, представляющая пользователя в системе.
@@ -57,8 +60,9 @@ public class User {
      * Не может быть null.
      * Максимальная длина - 50 символов.
      */
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-    private String role;
+    private Roles role;
 
 //    cascade = CascadeType.ALL: указывает Hibernate автоматически применять все каскадные операции
 //    к зависимым записям UsersProject, включая удаление.
@@ -77,4 +81,5 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<UsersProject> usersProjects = new ArrayList<>();
+
 }

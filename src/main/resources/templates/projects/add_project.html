@@ -11,7 +11,7 @@
     <h2>Заполните данные проекта</h2>
 
 
-    <form action="/add_project" method="POST" th:object="${project}">
+    <form action="/projects/add" method="POST" th:object="${project}">
         <input class="search-input" type="text" id="name" th:field="*{name}" placeholder="Введите название проекта"
                required>
         <br><br>
@@ -21,7 +21,7 @@
         <input class="search-input" type="date" id="createdDate" th:field="*{createdDate}" required>
         <br><br>
         <input class="button" type="submit" value="Добавить проект">
-        <input type="button" value="Отмена" class="button" onclick="location.href='/project_managment'"/>
+        <input type="button" value="Отмена" class="button" onclick="location.href='/projects/managment'"/>
     </form>
 </div>
 </body>

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Репозиторий для работы с сущностью User.
@@ -16,6 +17,8 @@ import java.util.List;
  * а также дополнительные методы запросов, унаследованные от JpaRepository.
  */
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    Optional<User> findByUserName(String username);
 
     @Query("SELECT u FROM User u " +
             "WHERE LOWER(u.userName) LIKE LOWER(CONCAT('%', :username, '%')) OR " +

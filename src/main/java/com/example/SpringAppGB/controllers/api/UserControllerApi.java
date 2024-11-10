@@ -1,5 +1,6 @@
 package com.example.SpringAppGB.controllers.api;
 
+import com.example.SpringAppGB.model.Roles;
 import com.example.SpringAppGB.model.User;
 import com.example.SpringAppGB.model.DTO.UserDTO;
 import com.example.SpringAppGB.repository.interfaces.UsersProjectRepository;
@@ -18,7 +19,7 @@ import java.util.List;
  * Предоставляет RESTful интерфейс для операций над пользователями.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 @AllArgsConstructor
 
 public class UserControllerApi {
@@ -31,7 +32,7 @@ public class UserControllerApi {
      *
      * @return список всех пользователей в виде ответа HTTP.
      */
-    @GetMapping("/get_all_users")
+    @GetMapping("/get_all")
     public ResponseEntity<List<User>> listUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
@@ -43,7 +44,7 @@ public class UserControllerApi {
      * @param query текст для поиска в именах пользователей или адресах электронной почты.
      * @return список пользователей, соответствующих запросу.
      */
-    @GetMapping("/search_users")
+    @GetMapping("/search")
     public ResponseEntity<List<User>> searchUsers(@RequestParam("query") String query) {
         List<User> users = userService.findUserByUserNameOrByEmail(query);
         return ResponseEntity.ok(users);
@@ -56,11 +57,11 @@ public class UserControllerApi {
      * @param id   идентификатор пользователя для обновления.
      * @return ответ с местоположением после успешного обновления.
      */
-    @PatchMapping("/edit_user/{id}")
+    @PatchMapping("/edit/{id}")
     public ResponseEntity<?> editUser(@RequestBody User user, @PathVariable("id") long id) {
         userService.updateUser(id, user);
         Map<String, Object> response = new HashMap<>();
-        response.put("location", "/users_managment");
+        response.put("location", "/users/managment");
         return ResponseEntity.ok(response);
     }
 
@@ -70,11 +71,11 @@ public class UserControllerApi {
      * @param userId идентификатор пользователя для удаления.
      * @return ответ с местоположением после успешного удаления.
      */
-    @DeleteMapping("/delete_user/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") Long userId) {
         userService.deleteUser(userId);
         Map<String, Object> response = new HashMap<>();
-        response.put("location", "/users_managment");
+        response.put("location", "/users/managment");
         return ResponseEntity.ok(response);
     }
 
@@ -84,13 +85,20 @@ public class UserControllerApi {
      * @param userDTO  объект пользователя
      * @return статус обработки запроса сервером
      */
-    @PostMapping("/add_user")
+    @PostMapping("/add")
     public ResponseEntity<User> addUser(@RequestBody UserDTO userDTO) {
         User user = new User();
         user.setUserName(userDTO.getUserName());
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
-        user.setRole(userDTO.getRole());
+        // Преобразуем строковое значение роли в значение enum Roles
+        try {
+            Roles role = Roles.valueOf(userDTO.getRole()); // Преобразуем строку в enum
+            user.setRole(role);
+        } catch (IllegalArgumentException e) {
+            // Обработка некорректного значения роли
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
         userService.addUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }

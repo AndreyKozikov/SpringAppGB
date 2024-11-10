@@ -16,7 +16,7 @@ import java.util.Map;
  * Предоставляет RESTful интерфейс для операций над проектами.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/projects")
 @AllArgsConstructor
 public class ProjectControllerApi {
 
@@ -28,7 +28,7 @@ public class ProjectControllerApi {
      *
      * @return список всех проектов в виде ответа HTTP.
      */
-    @GetMapping("/get_all_projects")
+    @GetMapping("/get_all")
     public ResponseEntity<?> getAllProjects() {
         return ResponseEntity.ok(projectService.getAllProjects());
     }
@@ -39,7 +39,7 @@ public class ProjectControllerApi {
      * @param searchText текст для поиска в именах или описаниях проектов.
      * @return список проектов, соответствующих запросу.
      */
-    @GetMapping("/search_projects")
+    @GetMapping("/search")
     public ResponseEntity<?> searchProjects(@RequestParam("query") String searchText) {
         List<Project> projects = projectService.findProjectByNameOrDescription(searchText);
         return ResponseEntity.ok(projects);
@@ -52,12 +52,12 @@ public class ProjectControllerApi {
      * @param project объект проекта с новыми данными.
      * @return ответ с местоположением после успешного обновления.
      */
-    @PatchMapping("/edit_project/{id}")
+    @PatchMapping("/edit/{id}")
     public ResponseEntity<?> editProjectById(@PathVariable("id") Long id, @RequestBody Project project) {
         System.out.println(project);
        // projectService.updateProjectById(id, project);
         Map<String, Object> response = new HashMap<>();
-        response.put("location", "/project_managment");
+        response.put("location", "/projects/managment");
         return ResponseEntity.ok(response);
     }
 
@@ -67,7 +67,7 @@ public class ProjectControllerApi {
      * @param id идентификатор проекта для удаления.
      * @return пустой ответ HTTP 200 (OK) после успешного удаления.
      */
-    @DeleteMapping("/delete_project/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteProjectById(@PathVariable("id") Long id) {
         projectService.deleteProjectById(id);
         return ResponseEntity.ok().build();
@@ -78,7 +78,7 @@ public class ProjectControllerApi {
      * @param project объект проекта
      * @return статус выполнения операции
      */
-    @PostMapping("/add_project")
+    @PostMapping("/add")
     public ResponseEntity<Project> addProject(@RequestBody Project project){
         projectService.addProject(project);
         return ResponseEntity.status(HttpStatus.CREATED).body(project);

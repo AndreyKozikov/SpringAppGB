@@ -67,6 +67,11 @@ public class ProjectService {
         projectRepository.flush();
     }
 
+    /**
+     * Удаляет проект по его идентификатору.
+     *
+     * @param projectId Идентификатор проекта, который нужно удалить.
+     */
     @Transactional
     public void deleteProjectById(Long projectId){
         projectRepository.deleteById(projectId);

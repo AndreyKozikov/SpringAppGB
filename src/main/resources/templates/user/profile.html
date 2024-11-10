@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Информация о пользователе</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<h2 style="text-align: center;">Информация о пользователе</h2>
+<table>
+    <tr>
+        <th>Имя пользователя</th>
+        <td th:text="${user.userName}">Username</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td th:text="${user.email}">Email</td>
+    </tr>
+</table>
+<br><br>
+<table>
+    <thead>
+    <tr>
+        <th>Название проекта</th>
+        <th>Описание проекта</th>
+        <th>Время создания проекта</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="project : ${projects}">
+        <td th:text="${project.name}"></td>
+        <td th:text="${project.description}"></td>
+        <td th:text="${project.createdDate}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

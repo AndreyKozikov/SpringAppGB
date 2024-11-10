@@ -6,10 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
 
@@ -20,6 +17,7 @@ import java.time.format.DateTimeFormatter;
  */
 @Controller
 @AllArgsConstructor
+@RequestMapping("/projects")
 public class ProjectController {
 
     private final ProjectService projectService;
@@ -29,7 +27,7 @@ public class ProjectController {
      *
      * @return имя представления для страницы управления проектами
      */
-    @GetMapping("/project_managment")
+    @GetMapping("/managment")
     public String userManagment() {
         return "/projects/project_managment";
     }
@@ -39,7 +37,7 @@ public class ProjectController {
      * @param project объект проекта
      * @return имя шаблона для отображения
      */
-    @GetMapping("/add_project")
+    @GetMapping("/add")
     public String showProjectForm(@ModelAttribute("project") Project project) {
         return "/projects/add_project";
     }
@@ -50,7 +48,7 @@ public class ProjectController {
      * @param project объект проекта
      * @return имя шаблона для отображения
      */
-    @PostMapping("/add_project")
+    @PostMapping("/add")
     public String addProject(@ModelAttribute("project") Project project){
         if (isProjectInvalid(project)){
             return "/projects/add_project";
@@ -67,7 +65,7 @@ public class ProjectController {
      * @param model модель для передачи данных на страницу.
      * @return имя представления для редактирования проекта.
      */
-    @GetMapping("/edit_project/{id}")
+    @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
         Project projectToEdit = projectService.findProjectById(id);
         System.out.println(projectToEdit.getCreatedDate());
@@ -81,7 +79,16 @@ public class ProjectController {
         return "/projects/edit_project";
     }
 
-    // Проверка правильности полученных данных
+    /**
+     * Проверяет, является ли проект недействительным. Проект считается недействительным, если:
+     * 1. Проект равен null.
+     * 2. Имя проекта равно null или пустое.
+     * 3. Описание проекта равно null или пустое.
+     * 4. Дата создания проекта равна null.
+     *
+     * @param project Объект проекта, который проверяется.
+     * @return true, если проект недействителен, иначе false.
+     */
     private boolean isProjectInvalid(Project project) {
         return project == null ||
                 project.getName() == null || project.getName().isEmpty() ||

@@ -2,14 +2,11 @@ package com.example.SpringAppGB.controllers;
 
 import com.example.SpringAppGB.model.User;
 import com.example.SpringAppGB.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -19,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  */
 @Controller
 @AllArgsConstructor
+@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
 
@@ -27,7 +25,7 @@ public class UserController {
      *
      * @return возвращает ссылку на HTML страницу
      */
-    @GetMapping("/users_managment")
+    @GetMapping("/managment")
     public String userManagment() {
         return "/users/users_managment";
     }
@@ -38,7 +36,7 @@ public class UserController {
      * @param user объект пользователя
      * @return имя шаблона для отображения
      */
-    @GetMapping("/add_user")
+    @GetMapping("/add")
     public String showUserForm(@ModelAttribute("user") User user) {
         //@ModelAttribute создает пустого пользователя и передает в шаблон для связывания параметров шаблона и класса
         return "/users/add_user";
@@ -51,7 +49,7 @@ public class UserController {
      * @param model модель для передачи данных в представление
      * @return имя шаблона для отображения
      */
-    @PostMapping("/add_user")
+    @PostMapping("/add")
     public String addUser(@ModelAttribute("user") User user, Model model) {
         if (isUserInvalid(user)) {
             return "/users/add_user";
@@ -68,13 +66,12 @@ public class UserController {
      * @param model модель для передачи данных на страницу.
      * @return имя представления для редактирования пользователя.
      */
-    @GetMapping("/edit_user/{id}")
+    @GetMapping("/edit/{id}")
     public String editUser(@PathVariable long id, Model model) {
         User user = userService.getUserById(id);
         model.addAttribute("user", user);
         return "/users/user_edit";
     }
-
 
     // Метод для проверки валидности пользователя
     private boolean isUserInvalid(User user) {
@@ -82,6 +79,6 @@ public class UserController {
                 user.getUserName() == null || user.getUserName().isEmpty() ||
                 user.getPassword() == null || user.getPassword().isEmpty() ||
                 user.getEmail() == null || user.getEmail().isEmpty() ||
-                user.getRole() == null || user.getRole().isEmpty();
+                user.getRole() == null;
     }
 }
