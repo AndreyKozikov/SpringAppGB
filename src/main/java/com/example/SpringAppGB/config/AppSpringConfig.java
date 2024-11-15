@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,6 +28,7 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 @EnableWebMvc
 @EnableTransactionManagement
 @AllArgsConstructor
+@EnableAspectJAutoProxy
 public class AppSpringConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;

@@ -3,6 +3,7 @@ package com.example.SpringAppGB.services;
 import com.example.SpringAppGB.Authorization.services.JwtTokenProvider;
 import com.example.SpringAppGB.Exceptions.AppErrors;
 import com.example.SpringAppGB.model.DTO.JwtRequest;
+import com.example.SpringAppGB.services.Interfaces.AuthServiceInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 @Service
 @AllArgsConstructor
-public class AuthService {
+public class AuthService implements AuthServiceInterface {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
@@ -32,6 +33,8 @@ public class AuthService {
      * @param response {@link HttpServletResponse} для добавления cookie с JWT токеном.
      * @return {@link ResponseEntity} с ответом, содержащим HTTP статус и перенаправлением на страницу в зависимости от роли пользователя.
      */
+
+    @Override
     public ResponseEntity<?> createAuthToken(JwtRequest user, HttpServletResponse response) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUserName(),
@@ -64,4 +67,6 @@ public class AuthService {
         }
 
     }
+
+
 }

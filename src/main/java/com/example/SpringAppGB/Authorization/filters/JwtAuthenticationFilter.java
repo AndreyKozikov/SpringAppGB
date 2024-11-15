@@ -41,6 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * @throws IOException если ошибка ввода/вывода при обработке запроса
      * @throws JWTVerificationException если токен недействителен
      */
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException, JWTVerificationException {

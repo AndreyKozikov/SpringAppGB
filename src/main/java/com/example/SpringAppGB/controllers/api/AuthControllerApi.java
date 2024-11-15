@@ -1,5 +1,6 @@
 package com.example.SpringAppGB.controllers.api;
 
+import com.example.SpringAppGB.controllers.api.Interfaces.AuthInterface;
 import com.example.SpringAppGB.model.DTO.JwtRequest;
 import com.example.SpringAppGB.services.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
-public class AuthControllerApi {
+public class AuthControllerApi implements AuthInterface {
     private final AuthService authService;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -38,7 +39,9 @@ public class AuthControllerApi {
      * @param response Ответ для добавления токена в cookie.
      * @return Ответ с JWT токеном в случае успешной авторизации.
      */
+
     @PostMapping("/login")
+    @Override
     public ResponseEntity<?> login (@RequestBody JwtRequest userDTO, HttpServletResponse response) {
         return authService.createAuthToken(userDTO, response);
     }

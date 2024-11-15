@@ -3,6 +3,7 @@ package com.example.SpringAppGB.services;
 import com.example.SpringAppGB.Authorization.services.JwtTokenProvider;
 import com.example.SpringAppGB.model.User;
 import com.example.SpringAppGB.repository.interfaces.UserRepository;
+import com.example.SpringAppGB.services.Interfaces.UserServiceInterface;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,7 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Service
 @AllArgsConstructor
-public class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService, UserServiceInterface {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;  // Добавлен PasswordEncoder
@@ -72,6 +73,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(userId).orElse(null);
     }
 
+    @Override
     public List<User> findUserByUserNameOrByEmail(String findString){
         List<User> users = userRepository.findUserByUserNameOrEmail(findString, findString);
         return users != null ? users : Collections.emptyList();
@@ -113,8 +115,9 @@ public class UserService implements UserDetailsService {
      * @return UserDetails объект с данными пользователя для аутентификации
      * @throws UsernameNotFoundException если пользователь с таким именем не найден
      */
-    @Override
+
     @Transactional
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = findByUserName(username).orElseThrow(() ->
                 new UsernameNotFoundException(""));
@@ -134,6 +137,7 @@ public class UserService implements UserDetailsService {
      * @return объект User, соответствующий имени пользователя, извлечённому из токена,
      *         или null, если пользователь не найден.
      */
+
     public User getUserFromToken(HttpServletRequest request) {
         String token = jwtTokenProvider.getJwtFromCookies(request);
         String username = jwtTokenProvider.getUsernameFromToken(token);

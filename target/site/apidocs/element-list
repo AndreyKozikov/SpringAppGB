@@ -1,12 +1,15 @@
 com.example.SpringAppGB
+com.example.SpringAppGB.Aspects
 com.example.SpringAppGB.Authorization.filters
 com.example.SpringAppGB.Authorization.interfaces
 com.example.SpringAppGB.Authorization.services
 com.example.SpringAppGB.config
 com.example.SpringAppGB.controllers
 com.example.SpringAppGB.controllers.api
+com.example.SpringAppGB.controllers.api.Interfaces
 com.example.SpringAppGB.Exceptions
 com.example.SpringAppGB.model
 com.example.SpringAppGB.model.DTO
 com.example.SpringAppGB.repository.interfaces
 com.example.SpringAppGB.services
+com.example.SpringAppGB.services.Interfaces

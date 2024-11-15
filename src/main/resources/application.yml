@@ -33,6 +33,7 @@ logging:
   level:
     org:
       springframework:
+        security: DEBUG
         web: DEBUG  # Уровень логирования для веб-компонентов Spring (в данном случае уровень DEBUG для детализированных логов).
       hibernate:
         SQL: DEBUG
