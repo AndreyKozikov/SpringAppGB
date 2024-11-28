@@ -6,13 +6,16 @@ import com.example.SpringAppGB.model.DTO.UserDTO;
 import com.example.SpringAppGB.repository.interfaces.UsersProjectRepository;
 import com.example.SpringAppGB.services.UserProjectService;
 import com.example.SpringAppGB.services.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Контроллер для управления пользователями через API.
@@ -53,12 +56,23 @@ public class UserControllerApi {
     /**
      * Метод обрабатывает PATCH-запрос на обновление информации о пользователе по идентификатору.
      *
-     * @param user объект пользователя с новыми данными.
-     * @param id   идентификатор пользователя для обновления.
-     * @return ответ с местоположением после успешного обновления.
+     * @param id     идентификатор пользователя для обновления
+     * @param user   объект пользователя с новыми данными
+     * @param bindingResult результат валидации входных данных
+     * @return ResponseEntity с информацией о местоположении после успешного обновления
+     *         или список ошибок валидации в случае некорректных данных
      */
     @PatchMapping("/edit/{id}")
-    public ResponseEntity<?> editUser(@RequestBody User user, @PathVariable("id") long id) {
+    public ResponseEntity<?> editUser(@PathVariable("id") long id,
+                                      @Valid @RequestBody User user,
+                                      BindingResult bindingResult) {
+        // Проверка ошибок валидации
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        }
         userService.updateUser(id, user);
         Map<String, Object> response = new HashMap<>();
         response.put("location", "/users/managment");
@@ -80,13 +94,22 @@ public class UserControllerApi {
     }
 
     /**
-     * Метод обрабатывает POST запрос на добавление нового пользователя в базу
+     * Метод обрабатывает POST-запрос на добавление нового пользователя в базу.
      *
-     * @param userDTO  объект пользователя
-     * @return статус обработки запроса сервером
+     * @param userDTO объект пользователя, содержащий данные для добавления
+     * @param bindingResult результат валидации входных данных
+     * @return ResponseEntity с сообщением об ошибках валидации, если они есть,
+     *         или статусом обработки запроса и добавленным пользователем
      */
     @PostMapping("/add")
-    public ResponseEntity<User> addUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> addUser(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult) {
+        // Проверка ошибок валидации
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        }
         User user = new User();
         user.setUserName(userDTO.getUserName());
         user.setEmail(userDTO.getEmail());

@@ -3,6 +3,9 @@ package com.example.SpringAppGB.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -35,6 +38,8 @@ public class User{
      * Должно быть уникальным и не может быть null.
      * Максимальная длина - 100 символов.
      */
+    @NotBlank(message = "The username cannot be empty")
+    @Size(min = 3, max = 100, message = "The username must be between 3 and 100 characters long")
     @Column(name="user_name", nullable = false, length = 100)
     private String userName;
 
@@ -44,6 +49,8 @@ public class User{
      * Максимальная длина - 255 символов.
      * Игнорируется при сериализации в JSON.
      */
+    @NotBlank(message = "The password cannot be empty")
+    @Size(min = 6, max = 255, message = "The password must contain from 6 to 255 characters")
     @Column(nullable = false, length = 255)
     @JsonIgnore
     private String password;
@@ -52,6 +59,7 @@ public class User{
      * Электронная почта пользователя.
      * Может быть null.
      */
+    @Email(message = "Incorrect email format")
     @Column
     private String email;
 

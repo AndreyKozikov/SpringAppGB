@@ -6,6 +6,25 @@
 
 ---
 
+### Урок 11. Spring Actuator. Настройка мониторинга с Prometheus и Grafana.
+
+В приложение добавлен Spring Actuator для отслеживания метрик вашего приложения. Настроена возможность визуализация 
+этих метрик с использованием Prometheus и Grafana.
+
+---
+
+### Урок 10. Spring Testing. JUnit и Mockito для написания тестов.
+
+Задание: Напишите тесты для основной логики вашего приложения с использованием Spring Testing, JUnit и Mockito.
+В процессе выполнения задания для микросервиса UserProjectService были разработаны:
+
+класс ProjectServiceUnitTest.java, содержащий юнит-тест updateProjectByIdUnitTest метода updateProjectById 
+сервиса ProjectService.java
+
+класс ProjectServiceIntegrationTest.java, соддержащий интеграционные тесты методов сервиса ProjectService.java
+
+---
+
 15 ноября 2024
 
 ### Урок 8. Spring AOP, управление транзакциями.

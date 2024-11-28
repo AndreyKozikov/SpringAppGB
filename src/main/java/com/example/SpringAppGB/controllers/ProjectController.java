@@ -2,10 +2,12 @@ package com.example.SpringAppGB.controllers;
 
 import com.example.SpringAppGB.model.Project;
 import com.example.SpringAppGB.services.ProjectService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
@@ -44,13 +46,17 @@ public class ProjectController {
 
     /**
      * Метод обрабатывает POST-запрос на добавление нового проекта в базу и
-     * осуществляет перенаправление на HTML страницу
-     * @param project объект проекта
-     * @return имя шаблона для отображения
+     * осуществляет перенаправление на HTML страницу.
+     *
+     * @param project объект проекта, содержащий данные для добавления
+     * @param bindingResult результат валидации входных данных
+     * @return имя шаблона для отображения или перенаправление на страницу управления проектами
      */
     @PostMapping("/add")
-    public String addProject(@ModelAttribute("project") Project project){
-        if (isProjectInvalid(project)){
+    public String addProject(@Valid @ModelAttribute("project") Project project,
+                             BindingResult bindingResult) {
+        // Проверка ошибок валидации
+        if (bindingResult.hasErrors()) {
             return "/projects/add_project";
         }
         projectService.addProject(project);
@@ -79,20 +85,4 @@ public class ProjectController {
         return "/projects/edit_project";
     }
 
-    /**
-     * Проверяет, является ли проект недействительным. Проект считается недействительным, если:
-     * 1. Проект равен null.
-     * 2. Имя проекта равно null или пустое.
-     * 3. Описание проекта равно null или пустое.
-     * 4. Дата создания проекта равна null.
-     *
-     * @param project Объект проекта, который проверяется.
-     * @return true, если проект недействителен, иначе false.
-     */
-    private boolean isProjectInvalid(Project project) {
-        return project == null ||
-                project.getName() == null || project.getName().isEmpty() ||
-                project.getDescription() == null || project.getDescription().isEmpty() ||
-                project.getCreatedDate() == null;
-    }
 }

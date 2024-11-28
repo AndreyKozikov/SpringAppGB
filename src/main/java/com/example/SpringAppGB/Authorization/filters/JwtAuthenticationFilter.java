@@ -47,7 +47,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException, JWTVerificationException {
         // Игнорируем проверку для маршрута логина
         String path = request.getServletPath();
-        if ("/login".equals(path) || "/auth/login".equals(path) || path.startsWith("/h2-console")) {
+        if ("/login".equals(path) ||
+                "/auth/login".equals(path) ||
+                path.startsWith("/h2-console") ||
+                path.startsWith("/actuator/metrics") ||
+                path.startsWith("/actuator/health") ||
+                path.startsWith("/actuator/prometheus") ||
+                path.startsWith("/css")) {
             filterChain.doFilter(request, response);
             return;
         }

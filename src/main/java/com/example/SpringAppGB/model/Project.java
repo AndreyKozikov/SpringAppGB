@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -31,6 +34,8 @@ public class Project {
      * Название проекта.
      * Не может быть null.
      */
+    @NotBlank(message = "The project name cannot be blank")
+    @Size(max = 255, message = "The name of the project should not exceed 255 characters")
     @Column
     private String name;
 
@@ -38,6 +43,7 @@ public class Project {
      * Описание проекта.
      * Может содержать подробную информацию о целях и задачах проекта.
      */
+    @Size(max = 500, message = "The project description should not exceed 500 characters")
     @Column
     private String description;
 
@@ -45,6 +51,7 @@ public class Project {
      * Дата создания проекта.
      * Автоматически устанавливается при создании нового проекта.
      */
+    @PastOrPresent(message = "Incorrect project creation date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(name="created_date")
     private LocalDate createdDate;

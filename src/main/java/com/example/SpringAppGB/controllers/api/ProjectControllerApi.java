@@ -3,13 +3,16 @@ package com.example.SpringAppGB.controllers.api;
 
 import com.example.SpringAppGB.model.Project;
 import com.example.SpringAppGB.services.ProjectService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Контроллер для управления проектами через API.
@@ -46,16 +49,25 @@ public class ProjectControllerApi {
     }
 
     /**
-     * Обрабатывает Patch-запрос на обновление проекта по идентификатору.
+     * Обрабатывает PATCH-запрос на обновление проекта по идентификатору.
      *
-     * @param id идентификатор проекта для обновления.
-     * @param project объект проекта с новыми данными.
-     * @return ответ с местоположением после успешного обновления.
+     * @param id идентификатор проекта для обновления
+     * @param project объект проекта с новыми данными
+     * @param bindingResult результат валидации входных данных
+     * @return ResponseEntity с информацией о местоположении после успешного обновления
+     *         или список ошибок валидации в случае некорректных данных
      */
     @PatchMapping("/edit/{id}")
-    public ResponseEntity<?> editProjectById(@PathVariable("id") Long id, @RequestBody Project project) {
-        System.out.println(project);
-       // projectService.updateProjectById(id, project);
+    public ResponseEntity<?> editProjectById(@PathVariable("id") Long id,
+                                             @Valid @RequestBody Project project,
+                                             BindingResult bindingResult) {
+        // Проверка ошибок валидации
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        }
         Map<String, Object> response = new HashMap<>();
         response.put("location", "/projects/managment");
         return ResponseEntity.ok(response);
@@ -75,11 +87,19 @@ public class ProjectControllerApi {
 
     /**
      * Метод обрабатывает POST-запрос на добавление нового проекта в базу
-     * @param project объект проекта
-     * @return статус выполнения операции
+     * @param project объект проекта для добавления
+     * @param bindingResult результат валидации
+     * @return ResponseEntity с добавленным проектом или списком ошибок валидации
      */
     @PostMapping("/add")
-    public ResponseEntity<Project> addProject(@RequestBody Project project){
+    public ResponseEntity<?> addProject(@Valid @RequestBody Project project, BindingResult bindingResult) {
+        // Проверка ошибок валидации
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        }
         projectService.addProject(project);
         return ResponseEntity.status(HttpStatus.CREATED).body(project);
     }

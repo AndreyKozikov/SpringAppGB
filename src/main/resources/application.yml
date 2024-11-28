@@ -37,3 +37,12 @@ logging:
         web: DEBUG  # Уровень логирования для веб-компонентов Spring (в данном случае уровень DEBUG для детализированных логов).
       hibernate:
         SQL: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always

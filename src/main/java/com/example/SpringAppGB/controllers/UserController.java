@@ -2,12 +2,16 @@ package com.example.SpringAppGB.controllers;
 
 import com.example.SpringAppGB.model.User;
 import com.example.SpringAppGB.services.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Контроллер для управления пользователями.
@@ -43,19 +47,25 @@ public class UserController {
     }
 
     /**
-     * Метод обрабатывает POST-запрос на добавление нового пользователя в базу
+     * Метод обрабатывает POST-запрос на добавление нового пользователя в базу.
      *
-     * @param user  объект пользователя
+     * @param user объект пользователя, содержащий данные для добавления
+     * @param bindingResult результат валидации входных данных
      * @param model модель для передачи данных в представление
-     * @return имя шаблона для отображения
+     * @return имя шаблона для отображения, либо форма с ошибками валидации
      */
     @PostMapping("/add")
-    public String addUser(@ModelAttribute("user") User user, Model model) {
-        if (isUserInvalid(user)) {
+    public String addUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            // Если есть ошибки валидации, добавляем их в модель и возвращаем на страницу добавления пользователя
+            Map<String, String> errors = new HashMap<>();
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errors.put(error.getField(), error.getDefaultMessage());
+            }
+            model.addAttribute("validationErrors", errors);
             return "/users/add_user";
         }
         userService.addUser(user);
-        //model.addAttribute("users", userService.getAllUsers());
         return "/users/users_managment";
     }
 
@@ -73,12 +83,4 @@ public class UserController {
         return "/users/user_edit";
     }
 
-    // Метод для проверки валидности пользователя
-    private boolean isUserInvalid(User user) {
-        return user == null ||
-                user.getUserName() == null || user.getUserName().isEmpty() ||
-                user.getPassword() == null || user.getPassword().isEmpty() ||
-                user.getEmail() == null || user.getEmail().isEmpty() ||
-                user.getRole() == null;
-    }
 }

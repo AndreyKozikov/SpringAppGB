@@ -3,7 +3,6 @@ package com.example.SpringAppGB.services;
 import com.example.SpringAppGB.model.Project;
 import com.example.SpringAppGB.repository.interfaces.ProjectRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +20,13 @@ public class ProjectService {
 
     /**
      * Метод для добавления нового проекта
+     *
      * @param project проект для добавления
+     * @return
      */
-    public void addProject(Project project){
+    public Project addProject(Project project){
         projectRepository.save(project);
+        return project;
     }
 
     /**

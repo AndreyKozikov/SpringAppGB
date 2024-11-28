@@ -87,17 +87,17 @@ public class GlobalExceptionHandler {
     }
 
 
-//    /**
-//     * Обработка других исключений. Возвращает ответ с сообщением об ошибке.
-//     *
-//     * @param ex Общее исключение.
-//     * @return Ответ с ошибкой и кодом состояния 500 (Internal Server Error).
-//     */
-//    // Обработка других исключений
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<String> handleGeneralException(Exception ex) {
-//        return new ResponseEntity<>("An error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+    /**
+     * Обработка других исключений. Возвращает ответ с сообщением об ошибке.
+     *
+     * @param ex Общее исключение.
+     * @return Ответ с ошибкой и кодом состояния 500 (Internal Server Error).
+     */
+    // Обработка других исключений
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGeneralException(Exception ex) {
+        return new ResponseEntity<>("An error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 
 }
